@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import MinusIcon from "./components/icons/MinusIcon"
 import PlusIcon from "./components/icons/PlusIcon"
 import { Button } from "./components/ui/button"
@@ -6,7 +6,6 @@ import { Field, FieldLabel } from "./components/ui/field"
 import { Input } from "./components/ui/input"
 import { Slider } from "./components/ui/slider"
 import CalculatorIcon from "./components/icons/CalculatorIcon"
-import ArrowRight from "./components/icons/ArrowRightIcon"
 import ArrowRightIcon from "./components/icons/ArrowRightIcon"
 import FuelIcon from "./components/icons/FuelIcon"
 
