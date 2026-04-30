@@ -7,11 +7,13 @@ import CalculatorIcon from "../icons/CalculatorIcon"
 import ArrowRightIcon from "../icons/ArrowRightIcon"
 import PlusIcon from "../icons/PlusIcon"
 import MinusIcon from "../icons/MinusIcon"
-import { Slider } from "@radix-ui/react-slider"
 import Header from "./Header"
 import Footer from "./Footer"
+import { Slider } from "../ui/slider"
+import { useToast } from "@/hooks/use-toast"
 
 function CalculatorScreen() {
+  const { toast } = useToast();
   const [mileage, setMileage] = React.useState("")
   const [kilometers, setKilometers] = React.useState("")
   const [price, setPrice] = React.useState("")
@@ -49,6 +51,17 @@ function CalculatorScreen() {
   ) => {
     e.preventDefault()
 
+    const totalKm = Number(kilometers)
+    const hasInvalid = personDistances.some((distance) => Number(distance || 0) > totalKm)
+
+    if (hasInvalid) {
+      toast({
+        variant: "Error",
+        title: "Invalid Distances",
+        description: "One or more distances exceed total kilometers",
+      })
+      return
+    }
     const totalCost = (Number(kilometers) / Number(mileage)) * Number(price)
     const totalFuel = Number(kilometers) / Number(mileage)
     const avgCost = totalCost / Number(persons || "1")
@@ -92,7 +105,6 @@ function CalculatorScreen() {
               max={100}
               step={1}
               onValueChange={(value) => setMileage(String(value[0]))}
-              aria-label="slider"
               className="w-full data-[slot=slider]:mt-1"
             />
           </Field>
