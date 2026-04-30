@@ -1,0 +1,37 @@
+import { FieldLabel } from "../ui/field"
+import IndianRupeeIcon from "../icons/IndianRupeeIcon"
+
+function Footer({
+  totalFuel,
+  totalTripCost,
+  avgCostPerPerson,
+}: {
+  totalFuel: number
+  totalTripCost: number
+  avgCostPerPerson: number
+}) {
+  return (
+    <div className="fixed right-4 bottom-4 left-4 flex flex-row justify-between rounded-lg bg-[#1E3A8A] p-3 text-white">
+      <div>
+        <FieldLabel htmlFor="totalFuel">Total Fuel</FieldLabel>
+        <p>{totalFuel.toFixed(2)} L</p>
+      </div>
+      <div>
+        <FieldLabel htmlFor="totalTripCost">Total Cost</FieldLabel>
+        <p className="flex flex-row items-center gap-1">
+          <IndianRupeeIcon />
+          {totalTripCost.toFixed(2)}
+        </p>
+      </div>
+      <div>
+        <FieldLabel htmlFor="avgCostPerPerson">Avg Cost/Person</FieldLabel>
+        <p className="flex flex-row items-center gap-1">
+          <IndianRupeeIcon />
+          {avgCostPerPerson.toFixed(2)}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export default Footer
