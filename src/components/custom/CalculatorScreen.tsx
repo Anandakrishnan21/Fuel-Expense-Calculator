@@ -10,10 +10,9 @@ import MinusIcon from "../icons/MinusIcon"
 import Header from "./Header"
 import Footer from "./Footer"
 import { Slider } from "../ui/slider"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 
 function CalculatorScreen() {
-  const { toast } = useToast();
   const [mileage, setMileage] = React.useState("")
   const [kilometers, setKilometers] = React.useState("")
   const [price, setPrice] = React.useState("")
@@ -52,13 +51,18 @@ function CalculatorScreen() {
     e.preventDefault()
 
     const totalKm = Number(kilometers)
-    const hasInvalid = personDistances.some((distance) => Number(distance || 0) > totalKm)
+    const hasInvalid = personDistances.some(
+      (distance) => Number(distance || 0) > totalKm
+    )
 
-    if (hasInvalid) {
-      toast({
-        variant: "Error",
-        title: "Invalid Distances",
-        description: "One or more distances exceed total kilometers",
+    if (
+      hasInvalid ||
+      totalKm <= 0 ||
+      Number(mileage) <= 0 ||
+      Number(price) <= 0
+    ) {
+      toast("Invalid Inputs", {
+        description: "Please enter valid values for all fields",
       })
       return
     }
@@ -75,11 +79,19 @@ function CalculatorScreen() {
         return sum + Number(distance || 0)
       }, 0)
 
+      if (totalDistance < totalKm) {
+        toast("Invalid Distances", {
+          description:
+            "The sum of individual distances is less than total kilometers",
+        })
+        return
+      }
+
       if (totalDistance === 0) return
 
       const calculatedAmounts = personDistances.map((distance) => {
-        const ratio = Number(distance || 0) / totalDistance
-        return ratio * totalCost
+        const ratio = Number(distance || 0) / Number(kilometers || 1)
+        return (ratio * totalCost) / Number(persons || "1")
       })
 
       setPersonAmounts(calculatedAmounts)
@@ -98,6 +110,7 @@ function CalculatorScreen() {
               type="text"
               placeholder="0 Km/L"
               value={mileage}
+              autoComplete="false"
               disabled
             />
             <Slider
@@ -117,6 +130,7 @@ function CalculatorScreen() {
               type="text"
               placeholder="0 Km"
               value={kilometers}
+              autoComplete="false"
               onChange={(e) => {
                 if (/^\d*\.?\d*$/.test(e.target.value)) {
                   setKilometers(e.target.value)
@@ -131,8 +145,9 @@ function CalculatorScreen() {
             <Input
               id="price"
               type="text"
-              placeholder="0 L"
+              placeholder="0 ₹/L"
               value={price}
+              autoComplete="false"
               onChange={(e) => setPrice(e.target.value)}
             />
           </Field>
@@ -153,6 +168,7 @@ function CalculatorScreen() {
                 className="flex flex-col items-center justify-center border-0 text-center focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
                 value={persons}
                 disabled
+                autoComplete="false"
                 onChange={(e) => {
                   setPersons(e.target.value)
                 }}
@@ -192,9 +208,9 @@ function CalculatorScreen() {
             : "hidden"
         }`}
       >
-        <FieldLabel htmlFor="individualBreakdown">
+        <small className="text-sm leading-none font-medium">
           Individual Breakdown
-        </FieldLabel>
+        </small>
         {Array.from({ length: Number(persons) }, (_, index) => (
           <div key={index} className="grid grid-cols-3 items-center gap-4">
             <p className="text-sm font-medium">Person {index + 1}</p>
@@ -204,6 +220,7 @@ function CalculatorScreen() {
               placeholder="Distance"
               value={personDistances[index] || ""}
               className="w-full max-w-[140px]"
+              autoComplete="false"
               onChange={(e) => {
                 if (/^\d*\.?\d*$/.test(e.target.value)) {
                   const updated = [...personDistances]

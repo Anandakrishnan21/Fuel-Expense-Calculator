@@ -4,7 +4,7 @@ function Header() {
   return (
     <header className="flex flex-row gap-2">
       <FuelIcon />
-      <h2 className="text-lg font-bold">Fuel Expense Calculator</h2>
+      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">Fuel Expense Calculator</h4>
     </header>
   )
 }
