@@ -1,4 +1,3 @@
-import { FieldLabel } from "../ui/field"
 import IndianRupeeIcon from "../icons/IndianRupeeIcon"
 
 function Footer({
