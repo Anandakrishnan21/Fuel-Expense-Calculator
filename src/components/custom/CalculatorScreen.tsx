@@ -90,9 +90,16 @@ function CalculatorScreen() {
       if (totalDistance === 0) return
 
       const calculatedAmounts = personDistances.map((distance) => {
-        const ratio = Number(distance || 0) / Number(kilometers || 1)
-        return (ratio * totalCost) / Number(persons || "1")
+        const ratio = Number(distance || 0) / totalDistance
+        return Number((ratio * totalCost).toFixed(2))
       })
+
+      const sumAmounts = calculatedAmounts.reduce((a, b) => a + b, 0)
+      
+      const diff = totalCost - sumAmounts
+      if (calculatedAmounts.length > 0) {
+        calculatedAmounts[calculatedAmounts.length - 1] = Number((calculatedAmounts[calculatedAmounts.length - 1] + diff).toFixed(2))
+      }
 
       setPersonAmounts(calculatedAmounts)
     }
